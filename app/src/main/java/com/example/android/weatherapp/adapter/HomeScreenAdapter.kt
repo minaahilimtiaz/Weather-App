@@ -19,6 +19,7 @@ class HomeScreenAdapter:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var currentWeatherData = listOf<CurrentWeatherModel>()
         set(value) {
             field = value
+            notifyDataSetChanged()
         }
 
     var threeHourlyWeatherData = listOf<ThreeHourlyWeatherModel>()
@@ -54,12 +55,6 @@ class HomeScreenAdapter:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             is CurrentWeatherViewHolder -> {
                 val temp = currentWeatherData[0]
                 holder.bindingViewToData(currentWeatherData[0])
-            }
-            is ThreeHourlyWeatherViewHolder -> {
-                holder.bindingViewToData(threeHourlyWeatherData)
-            }
-            is WeeklyWeatherViewHolder -> {
-                holder.bindingViewToData(weeklyWeatherData)
             }
         }
     }

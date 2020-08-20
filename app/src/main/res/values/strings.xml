@@ -8,5 +8,7 @@
     <string name="current_date">August 18, 2020 </string>
     <string name="hourly_time">12pm</string>
     <string name="hourly_temperature">10°C</string>
+    <string name="day_name">FRI</string>
+    <string name="temperature_change">14 C / 17 C</string>
 
 </resources>

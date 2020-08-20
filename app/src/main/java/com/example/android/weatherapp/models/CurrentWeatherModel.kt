@@ -6,7 +6,7 @@ data class CurrentWeatherModel(
     val name: String
 )
 
-data class WeatherModel (
+data class WeatherModel(
     val main: String
 )
 

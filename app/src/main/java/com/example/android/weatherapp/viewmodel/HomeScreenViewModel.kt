@@ -9,8 +9,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
-class HomeScreenViewModel : ViewModel() {
+private const val APP_ID= "4dfdfc7144138f43bfa36b5b3a4b097f"
+
+class HomeScreenViewModel : BaseViewModel() {
     private val viewModelJob = Job ()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
@@ -24,13 +27,15 @@ class HomeScreenViewModel : ViewModel() {
 
     private fun getCurrentWeather() {
         coroutineScope.launch {
-            var weatherObj = WeatherApi.retrofitService.getCurrentWeather()
+            var weatherObj = WeatherApi.retrofitService.getCurrentWeather("London", APP_ID)
             try {
-                val weatherData =weatherObj
-                _currentWeather.value = weatherData.await()
-                println(currentWeather.value)
-            } catch (e: Exception) {
-                println(e)
+                 if(weatherObj.isSuccessful) {
+                     _currentWeather.value = weatherObj.body()
+                 }
+            } catch (e: HttpException) {
+               println("Exception ${e.message}")
+            } catch (e: Throwable) {
+                println("Ooops: Something else went wrong")
             }
         }
     }
