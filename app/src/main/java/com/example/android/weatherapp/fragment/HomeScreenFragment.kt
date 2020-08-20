@@ -1,39 +1,56 @@
 package com.example.android.weatherapp.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.example.android.weatherapp.viewmodel.HomeScreenViewModel
 import com.example.android.weatherapp.R
-import com.example.android.weatherapp.adapter.HomeScreenAdapter
 import com.example.android.weatherapp.databinding.FragmentHomeScreenBinding
-import com.example.android.weatherapp.models.CurrentWeatherModel
-import com.example.android.weatherapp.models.ThreeHourlyWeatherModel
 
-class HomeScreenFragment : Fragment() {
+class HomeScreenFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         val binding: FragmentHomeScreenBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home_screen, container, false)
-        var currentWeatherList = preparecCurrentWeatherList()
+
+       /* val adapter = HomeScreenAdapter()
+        binding.homeScreenRcv.adapter = adapter*/
+
+
+        val viewModel: HomeScreenViewModel by lazy {
+            ViewModelProviders.of(this).get(HomeScreenViewModel::class.java)
+        }
+
+
+       viewModel.currentWeather.observe(viewLifecycleOwner, Observer { currentData ->
+            currentData?.let {
+                val fetchedData = currentData.name
+                println(fetchedData)
+            }
+        })
+
+
+      /*  var currentWeatherList = preparecCurrentWeatherList()
         var threeHourlyList = prepareThreeHourlyList()
-        val adapter = HomeScreenAdapter()
-        binding.homeScreenRcv.adapter = adapter
-        assignDataToAdapter(adapter, currentWeatherList, threeHourlyList)
+        var weeklyList = prepareDailyWeatherList()
+        assignDataToAdapter(adapter, currentWeatherList, threeHourlyList, weeklyList)*/
         return binding.root
     }
 
-    private fun assignDataToAdapter(
+  /*  private fun assignDataToAdapter(
         adapter: HomeScreenAdapter,
         currentWeatherList: List<CurrentWeatherModel>,
-        threeHourlyList: List<ThreeHourlyWeatherModel>
+        threeHourlyList: List<ThreeHourlyWeatherModel>, weeklyList: List<WeeklyWeatherModel>
     ) {
         adapter.apply {
             currentWeatherData = currentWeatherList
             threeHourlyWeatherData = threeHourlyList
+            weeklyWeatherData = weeklyList
         }
 
     }
@@ -57,4 +74,12 @@ class HomeScreenFragment : Fragment() {
         )
     }
 
+    private fun prepareDailyWeatherList(): List<WeeklyWeatherModel> {
+        return listOf<WeeklyWeatherModel>(
+            WeeklyWeatherModel(
+                "FRI", "17 C / 14 C"),  WeeklyWeatherModel("SAT", "17 C / 14 C"),
+            WeeklyWeatherModel("SUN", "17 C / 14 C")
+        )
+    }
+*/
 }
