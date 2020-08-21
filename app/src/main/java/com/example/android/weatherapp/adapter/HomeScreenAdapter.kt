@@ -3,13 +3,12 @@ package com.example.android.weatherapp.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.weatherapp.R
 import com.example.android.weatherapp.models.CurrentWeatherModel
 import kotlinx.android.synthetic.main.current_weather_layout.view.*
 
-class HomeScreenAdapter:RecyclerView.Adapter<HomeScreenAdapter.ViewHolder>() {
+class HomeScreenAdapter:RecyclerView.Adapter<HomeScreenAdapter.CurrentWeatherViewHolder>() {
 
     var data = listOf<CurrentWeatherModel>()
         set(value) {
@@ -21,16 +20,16 @@ class HomeScreenAdapter:RecyclerView.Adapter<HomeScreenAdapter.ViewHolder>() {
         return data.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeScreenAdapter.ViewHolder {
-        return ViewHolder.inflateAndGetViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeScreenAdapter.CurrentWeatherViewHolder {
+        return CurrentWeatherViewHolder.inflateAndGetViewHolder(parent)
     }
 
-    override fun onBindViewHolder(holder: HomeScreenAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: HomeScreenAdapter.CurrentWeatherViewHolder, position: Int) {
         val item = data.get(position)
         holder.bindingViewToData(item)
     }
 
-    class ViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
+    class CurrentWeatherViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 
         fun bindingViewToData(item: CurrentWeatherModel) {
             itemView.current_weather_type_text.text = item.weatherType
@@ -40,11 +39,11 @@ class HomeScreenAdapter:RecyclerView.Adapter<HomeScreenAdapter.ViewHolder>() {
         }
 
         companion object {
-            fun inflateAndGetViewHolder(parent: ViewGroup): ViewHolder {
+            fun inflateAndGetViewHolder(parent: ViewGroup): CurrentWeatherViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val view = layoutInflater.inflate(R.layout.current_weather_layout,
                     parent, false)
-                return ViewHolder(view)
+                return CurrentWeatherViewHolder(view)
             }
 
         }
