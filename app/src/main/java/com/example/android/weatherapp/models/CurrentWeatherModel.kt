@@ -11,5 +11,7 @@ data class WeatherModel(
 )
 
 data class MainModel(
-    val temp: Double
+    val temp: Double,
+    val temp_max: Double,
+    val temp_min: Double
 )

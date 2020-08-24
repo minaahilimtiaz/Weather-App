@@ -7,29 +7,35 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.android.weatherapp.viewmodel.HomeScreenViewModel
 import com.example.android.weatherapp.R
 import com.example.android.weatherapp.adapter.HomeScreenAdapter
 import com.example.android.weatherapp.databinding.FragmentHomeScreenBinding
-import com.example.android.weatherapp.models.CurrentWeatherModel
+import com.example.android.weatherapp.viewmodel.HomeScreenViewModel
 
 class HomeScreenFragment : BaseFragment() {
+
     val viewModel: HomeScreenViewModel by lazy {
         ViewModelProviders.of(this).get(HomeScreenViewModel::class.java)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
-        val binding: FragmentHomeScreenBinding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_home_screen, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-       viewModel.currentWeather.observe(viewLifecycleOwner, Observer { currentData ->
-            currentData?.let {
-                val adapter = HomeScreenAdapter()
-                binding.homeScreenRcv.adapter = adapter
-                adapter.currentWeatherData = listOf(currentData)
-            }
-        })
+        val binding: FragmentHomeScreenBinding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_home_screen, container, false)
+        val adapter = HomeScreenAdapter()
+        setOnDataUpdatedObserver(binding, adapter)
         return binding.root
+    }
+
+    private fun setOnDataUpdatedObserver(binding: FragmentHomeScreenBinding, adapter: HomeScreenAdapter ) {
+        viewModel.eventDataUpdated.observe(viewLifecycleOwner, Observer {
+            binding.homeScreenReyclerview.adapter = adapter
+            adapter.currentWeatherData = viewModel.currentWeather
+            adapter.threeHourlyWeatherData = viewModel.threeHourlyWeatherForecast
+            adapter.weeklyWeatherData = viewModel.weeklyWeatherForecast
+        })
     }
 }

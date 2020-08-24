@@ -8,7 +8,6 @@ import com.example.android.weatherapp.R
 import com.example.android.weatherapp.models.WeeklyWeatherModel
 import kotlinx.android.synthetic.main.daily_weather_layout.view.*
 
-
 class DailyWeatherViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
 
     fun bindingViewToData(item: WeeklyWeatherModel) {

@@ -2,14 +2,21 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-    <fragment
+   <!-- <fragment
         android:id="@+id/nav_host_fragment"
         android:name="com.example.android.weatherapp.fragment.HomeScreenFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+-->
+    <FrameLayout
+        android:id="@+id/your_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

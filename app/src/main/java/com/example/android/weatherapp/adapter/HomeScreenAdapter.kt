@@ -14,8 +14,7 @@ private const val ITEM_VIEW_TYPE_THREE_HOURLY_WEATHER = 1
 private const val ITEM_VIEW_TYPE_WEEKLY_WEATHER= 2
 private const val NUMBER_OF_ROWS = 3
 
-class HomeScreenAdapter:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
+class HomeScreenAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var currentWeatherData = listOf<CurrentWeatherModel>()
         set(value) {
             field = value
@@ -53,8 +52,13 @@ class HomeScreenAdapter:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CurrentWeatherViewHolder -> {
-                val temp = currentWeatherData[0]
                 holder.bindingViewToData(currentWeatherData[0])
+            }
+           is ThreeHourlyWeatherViewHolder -> {
+                holder.bindingViewToData(threeHourlyWeatherData)
+            }
+           is WeeklyWeatherViewHolder -> {
+                holder.bindingViewToData(weeklyWeatherData)
             }
         }
     }
