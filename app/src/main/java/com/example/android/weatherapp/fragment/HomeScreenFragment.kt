@@ -25,7 +25,7 @@ class HomeScreenFragment : BaseFragment() {
 
         val binding: FragmentHomeScreenBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home_screen, container, false)
-        val adapter = HomeScreenAdapter()
+        val adapter = HomeScreenAdapter(context!!)
         setOnDataUpdatedObserver(binding, adapter)
         return binding.root
     }

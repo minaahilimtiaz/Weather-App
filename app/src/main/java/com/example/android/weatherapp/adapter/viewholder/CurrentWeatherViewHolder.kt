@@ -1,5 +1,6 @@
 package com.example.android.weatherapp.adapter.viewholder
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +12,12 @@ import kotlinx.android.synthetic.main.current_weather_layout.view.*
 
 class CurrentWeatherViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
-    fun bindingViewToData(item: CurrentWeatherModel) {
+    fun bindingViewToData(item: CurrentWeatherModel, context: Context) {
         itemView.current_weather_type_text.text = item.weather[0].main
         itemView.current_temp_text.text = Helper.convertToCelsius(item.main.temp).toString()
         itemView.current_location_text.text = item.name
         itemView.current_date_text.text = Helper.getCurrentDate()
+        Helper.loadImage(itemView.current_weather_image_view, item.weather[0].icon, context)
     }
 
     companion object {

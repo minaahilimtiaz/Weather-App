@@ -60,7 +60,8 @@ class HomeScreenViewModel : BaseViewModel() {
             for( obj in tempList){
                 threeHourlyWeatherForecast.add(ThreeHourlyWeatherModel(
                         Helper.getTimeFromDate(obj.dt_txt),
-                        Helper.convertToCelsius(obj.main.temp).toString()
+                        Helper.convertToCelsius(obj.main.temp).toString(),
+                        obj.weather[0].icon
                     )
                 )
             }
@@ -75,7 +76,8 @@ class HomeScreenViewModel : BaseViewModel() {
                         Helper.getDayFromDate(tempObj.dt_txt),
                         Helper.formatWeeklyForecastTemperature(
                             tempObj.main.temp_min,
-                            tempObj.main.temp_max)
+                            tempObj.main.temp_max),
+                        tempObj.weather[0].icon
                     )
                 )
             }
@@ -96,7 +98,7 @@ class HomeScreenViewModel : BaseViewModel() {
             } catch (e: HttpException) {
                println("Exception ${e.message}")
             } catch (e: Throwable) {
-                println("Ooops: Something else went wrong")
+                println("Something else went wrong")
             }
         }
     }

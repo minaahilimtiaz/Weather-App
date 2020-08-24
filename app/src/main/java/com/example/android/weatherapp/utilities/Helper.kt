@@ -1,5 +1,9 @@
 package com.example.android.weatherapp.utilities
 
+import android.content.Context
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.example.android.weatherapp.R
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -38,12 +42,19 @@ object Helper {
     fun roundDecimalPlaces(input: Double): Double{
        return  (round(input * 10)/10)
     }
+
     fun formatWeeklyForecastTemperature(minTemp: Double, maxTemp: Double): String {
         val minCelsius = convertToCelsius(minTemp)
         val minCelsiusFormatted = roundDecimalPlaces(minCelsius).toString()
         val maxCelsius = convertToCelsius(maxTemp)
         val maxCelsiusFormatted = roundDecimalPlaces(maxCelsius).toString()
         return ("$minCelsiusFormatted / $maxCelsiusFormatted")
+    }
+
+    fun loadImage(imgView: ImageView, iconId: String, context:Context) {
+        Glide.with(imgView.context)
+            .load(context.getString(R.string.url, iconId))
+            .into(imgView)
     }
 }
 

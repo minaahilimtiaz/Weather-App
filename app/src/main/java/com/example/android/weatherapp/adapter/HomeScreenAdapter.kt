@@ -1,5 +1,6 @@
 package com.example.android.weatherapp.adapter
 
+import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.weatherapp.adapter.viewholder.CurrentWeatherViewHolder
@@ -14,7 +15,8 @@ private const val ITEM_VIEW_TYPE_THREE_HOURLY_WEATHER = 1
 private const val ITEM_VIEW_TYPE_WEEKLY_WEATHER= 2
 private const val NUMBER_OF_ROWS = 3
 
-class HomeScreenAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HomeScreenAdapter(activityContext: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    val context: Context = activityContext
     var currentWeatherData = listOf<CurrentWeatherModel>()
         set(value) {
             field = value
@@ -27,8 +29,8 @@ class HomeScreenAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
 
     var weeklyWeatherData = listOf<WeeklyWeatherModel>()
-        set(updatedValue) {
-            field = updatedValue
+        set(newValue) {
+            field = newValue
         }
 
     override fun getItemViewType(position: Int): Int {
@@ -52,13 +54,13 @@ class HomeScreenAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CurrentWeatherViewHolder -> {
-                holder.bindingViewToData(currentWeatherData[0])
+                holder.bindingViewToData(currentWeatherData[0], context)
             }
            is ThreeHourlyWeatherViewHolder -> {
-                holder.bindingViewToData(threeHourlyWeatherData)
+                holder.bindingViewToData(threeHourlyWeatherData, context)
             }
            is WeeklyWeatherViewHolder -> {
-                holder.bindingViewToData(weeklyWeatherData)
+                holder.bindingViewToData(weeklyWeatherData, context)
             }
         }
     }

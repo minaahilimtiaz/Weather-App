@@ -12,5 +12,6 @@
     <string name="temperature_change">14 C / 17 C</string>
     <string name="allow_location">"Allow Location"</string>
     <string name="settings">"Setting</string>
+    <string name="url">http://openweathermap.org/img/wn/%s@2x.png</string>
 
 </resources>

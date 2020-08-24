@@ -7,7 +7,8 @@ data class CurrentWeatherModel(
 )
 
 data class WeatherModel(
-    val main: String
+    val main: String,
+    val icon: String
 )
 
 data class MainModel(
