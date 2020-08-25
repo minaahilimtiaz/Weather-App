@@ -2,4 +2,10 @@
     <string name="app_name">WeatherApp</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="current_weather_type_text">Humid</string>
+    <string name="current_temp">16°C</string>
+    <string name="current_location">Lahore, Pakistan</string>
+    <string name="current_date">August 18, 2020 </string>
+
+
 </resources>
