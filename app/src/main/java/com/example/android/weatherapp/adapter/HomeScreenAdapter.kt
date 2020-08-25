@@ -5,31 +5,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.android.weatherapp.adapter.viewholder.CurrentWeatherViewHolder
 import com.example.android.weatherapp.adapter.viewholder.ThreeHourlyWeatherViewHolder
 import com.example.android.weatherapp.adapter.viewholder.WeeklyWeatherViewHolder
-import com.example.android.weatherapp.models.CurrentWeatherModel
-import com.example.android.weatherapp.models.ThreeHourlyWeatherModel
-import com.example.android.weatherapp.models.WeeklyWeatherModel
+import com.example.android.weatherapp.models.*
 
 private const val ITEM_VIEW_TYPE_CURRENT_WEATHER = 0
 private const val ITEM_VIEW_TYPE_THREE_HOURLY_WEATHER = 1
 private const val ITEM_VIEW_TYPE_WEEKLY_WEATHER= 2
 private const val NUMBER_OF_ROWS = 3
 
-class HomeScreenAdapter:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HomeScreenAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var currentWeatherData = listOf<CurrentWeatherModel>()
+    var data: ForecastData = ForecastData()
         set(value) {
             field = value
             notifyDataSetChanged()
-        }
-
-    var threeHourlyWeatherData = listOf<ThreeHourlyWeatherModel>()
-        set(updatedValue) {
-            field = updatedValue
-        }
-
-    var weeklyWeatherData = listOf<WeeklyWeatherModel>()
-        set(updatedValue) {
-            field = updatedValue
         }
 
     override fun getItemViewType(position: Int): Int {
@@ -52,9 +40,14 @@ class HomeScreenAdapter:RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CurrentWeatherViewHolder -> {
-                val temp = currentWeatherData[0]
-                holder.bindingViewToData(currentWeatherData[0])
+                holder.bindingViewToData(data.current[0])
             }
+           is ThreeHourlyWeatherViewHolder -> {
+                holder.bindingViewToData(data.threeHourly)
+           }
+           is WeeklyWeatherViewHolder -> {
+                holder.bindingViewToData(data.weekly)
+           }
         }
     }
 

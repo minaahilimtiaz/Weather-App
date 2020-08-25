@@ -2,41 +2,71 @@ package com.example.android.weatherapp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.android.weatherapp.WeatherApi
-import com.example.android.weatherapp.models.CurrentWeatherModel
+import com.example.android.weatherapp.WeatherRepository
+import com.example.android.weatherapp.models.*
+import com.example.android.weatherapp.utilities.NO_NETWORK
+import com.example.android.weatherapp.utilities.NO_RECORD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-
-private const val APP_ID= "4dfdfc7144138f43bfa36b5b3a4b097f"
+import java.lang.Exception
 
 class HomeScreenViewModel : BaseViewModel() {
+
     private val viewModelJob = Job ()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    private val _currentWeather = MutableLiveData<CurrentWeatherModel>()
-    val currentWeather: LiveData<CurrentWeatherModel>
-        get() = _currentWeather
+    var forecastData: ForecastData = ForecastData()
+    var errorString = String()
+
+    private val _eventDataFetched = MutableLiveData<Boolean>()
+    val eventDataFetched: LiveData<Boolean>
+        get() = _eventDataFetched
+
+    private val _eventLoading = MutableLiveData<Boolean>()
+    val eventLoading: LiveData<Boolean>
+        get() = _eventLoading
+
+    private val _eventError = MutableLiveData<Boolean>()
+    val eventError: LiveData<Boolean>
+        get() = _eventError
+
+    private val repository = WeatherRepository()
 
     init {
-        getCurrentWeather()
+      fetchDataFromRepository()
     }
 
-    private fun getCurrentWeather() {
+    private fun fetchDataFromRepository() {
         coroutineScope.launch {
-            var weatherObj = WeatherApi.retrofitService.getCurrentWeather("London", APP_ID)
             try {
-                 if(weatherObj.isSuccessful) {
-                     _currentWeather.value = weatherObj.body()
-                 }
-            } catch (e: HttpException) {
-               println("Exception ${e.message}")
-            } catch (e: Throwable) {
-                println("Ooops: Something else went wrong")
+                val result: ForecastData = repository.fetchData()
+                if(result.current.isEmpty() || result.threeHourly.isEmpty() || result.weekly.isEmpty() ) {
+                    onErrorOccurred(NO_RECORD)
+                } else {
+                    onSuccess(result)
+                }
+
+            } catch (e: Exception) {
+                onErrorOccurred(NO_NETWORK)
             }
         }
     }
+
+    private fun onSuccess(result: ForecastData) {
+        forecastData = result
+        _eventDataFetched.value = true
+        _eventLoading.value = true
+    }
+
+    private fun onErrorOccurred( errorMessage: String) {
+        errorString = errorMessage
+        _eventError.value = true
+    }
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
 }
