@@ -28,17 +28,17 @@ class HomeScreenViewModel : BaseViewModel() {
         get() = _eventDataUpdated
 
     init {
-      fetchData()
+      fetchData("Lahore")
     }
 
-    private fun fetchData() {
-        getCurrentWeather()
-        getForecast()
+    fun fetchData(city: String) {
+        getCurrentWeather(city)
+        getForecast(city)
     }
 
-    private fun getForecast() {
+    private fun getForecast(city: String) {
         coroutineScope.launch {
-            val forecastObj = WeatherApi.retrofitService.getFiveDaysWeather("Lahore",
+            val forecastObj = WeatherApi.retrofitService.getFiveDaysWeather(city,
                 Helper.APP_ID)
             try {
                 if(forecastObj.isSuccessful) {
@@ -84,9 +84,9 @@ class HomeScreenViewModel : BaseViewModel() {
         }
     }
 
-    private fun getCurrentWeather() {
+    private fun getCurrentWeather(city: String) {
         coroutineScope.launch {
-            val weatherObj = WeatherApi.retrofitService.getCurrentWeather("Lahore",
+            val weatherObj = WeatherApi.retrofitService.getCurrentWeather(city,
                 Helper.APP_ID)
             try {
                  if(weatherObj.isSuccessful) {

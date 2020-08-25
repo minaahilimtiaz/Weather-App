@@ -33,7 +33,8 @@ class MainActivity : BaseActivity() , LocationListener {
 
     override fun onStart() {
         super.onStart()
-        checkPermissionsAndGetLocation()
+        replaceHomeScreenFragment("Lahore")
+     //   checkPermissionsAndGetLocation()
     }
 
     private fun checkPermissionsAndGetLocation() {

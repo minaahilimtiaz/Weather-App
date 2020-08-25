@@ -2,6 +2,7 @@ package com.example.android.weatherapp.utilities
 
 import android.content.Context
 import android.widget.ImageView
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.example.android.weatherapp.R
 import java.text.DateFormat
@@ -51,10 +52,13 @@ object Helper {
         return ("$minCelsiusFormatted / $maxCelsiusFormatted")
     }
 
-    fun loadImage(imgView: ImageView, iconId: String, context:Context) {
-        Glide.with(imgView.context)
-            .load(context.getString(R.string.url, iconId))
-            .into(imgView)
-    }
+}
+
+fun ImageView.loadImage(iconId: String , context: Context) {
+
+    val imgUri = context.getString(R.string.url, iconId).toUri().buildUpon().scheme("http").build()
+    Glide.with(this.context)
+        .load(imgUri)
+        .into(this)
 }
 
