@@ -1,5 +1,6 @@
 package com.example.android.weatherapp.activity
 
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
@@ -23,8 +24,8 @@ private const val REQUEST_LOCATION = 1
 
 class MainActivity : BaseActivity() , LocationListener {
     private lateinit  var locationManager: LocationManager
+  
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
