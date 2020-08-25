@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.android.weatherapp.WeatherRepository
 import com.example.android.weatherapp.models.*
+import com.example.android.weatherapp.utilities.NO_NETWORK
+import com.example.android.weatherapp.utilities.NO_RECORD
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -40,13 +42,22 @@ class HomeScreenViewModel : BaseViewModel() {
         coroutineScope.launch {
             try {
                 val result: ForecastData = repository.fetchData()
-                forecastData = result
-                _eventDataFetched.value = true
-                _eventLoading.value = true
+                if(result.current.isEmpty() || result.threeHourly.isEmpty() || result.weekly.isEmpty() ) {
+                    onErrorOccurred(NO_RECORD)
+                } else {
+                    onSuccess(result)
+                }
+
             } catch (e: Exception) {
-                onErrorOccurred(e.message.toString())
+                onErrorOccurred(NO_NETWORK)
             }
         }
+    }
+
+    private fun onSuccess(result: ForecastData) {
+        forecastData = result
+        _eventDataFetched.value = true
+        _eventLoading.value = true
     }
 
     private fun onErrorOccurred( errorMessage: String) {

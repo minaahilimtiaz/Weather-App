@@ -21,14 +21,13 @@ class WeatherRepository() {
 
     private suspend fun getForecast() {
         withContext(Dispatchers.IO) {
-            val result = WeatherApi.retrofitService.getFiveDaysWeather("Lahore",
-                APP_ID)
             try {
+                val result = WeatherApi.retrofitService.getFiveDaysWeather("Lahore",
+                    APP_ID)
                 if(result.isSuccessful) {
                     prepareThreeHourlyForecastData(result.body())
                     prepareWeeklyForecastData(result.body())
                 }
-
             } catch (e: HttpException) {
                 println("Exception ${e.message}")
             } catch (e: Throwable) {

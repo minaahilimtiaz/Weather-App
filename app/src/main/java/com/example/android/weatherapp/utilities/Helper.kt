@@ -8,7 +8,6 @@ import kotlin.math.round
 
 class Helper {
 
-    @SuppressLint("SimpleDateFormat")
     fun getDayFromDate(inputDate: String): String {
         val format = SimpleDateFormat(RESULT_DATE_FORMAT, Locale.ENGLISH)
         val date = format.parse(inputDate)

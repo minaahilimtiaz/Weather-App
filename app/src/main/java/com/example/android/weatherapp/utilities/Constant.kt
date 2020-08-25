@@ -21,3 +21,7 @@ const val MIN_PROGRESS = 50
 
 //Service class constants
 const val BASE_URL = "https://api.openweathermap.org/"
+
+//ViewModel constants
+const val NO_RECORD = "No Record Found"
+const val NO_NETWORK = "Poor or No Internet Connection"
