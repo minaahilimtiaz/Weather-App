@@ -6,6 +6,7 @@
     <string name="current_temp">16°C</string>
     <string name="current_location">Lahore, Pakistan</string>
     <string name="current_date">August 18, 2020 </string>
-
+    <string name="hourly_time">12pm</string>
+    <string name="hourly_temperature">10°C</string>
 
 </resources>
