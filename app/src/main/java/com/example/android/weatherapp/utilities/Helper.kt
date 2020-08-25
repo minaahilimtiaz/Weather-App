@@ -1,5 +1,6 @@
 package com.example.android.weatherapp.utilities
 
+import android.annotation.SuppressLint
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -7,6 +8,7 @@ import kotlin.math.round
 
 class Helper {
 
+    @SuppressLint("SimpleDateFormat")
     fun getDayFromDate(inputDate: String): String {
         val format = SimpleDateFormat(RESULT_DATE_FORMAT, Locale.ENGLISH)
         val date = format.parse(inputDate)

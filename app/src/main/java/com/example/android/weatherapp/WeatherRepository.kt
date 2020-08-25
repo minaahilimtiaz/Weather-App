@@ -6,10 +6,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-class WeatherRepository {
+class WeatherRepository() {
 
     private val weatherForecast: ForecastData = ForecastData()
-    private val helper: Helper = Helper()
+    private val formatHelper: Helper = Helper()
 
     suspend fun fetchData(): ForecastData {
         withContext(Dispatchers.IO) {
@@ -19,15 +19,16 @@ class WeatherRepository {
         return weatherForecast
     }
 
-    //TODO: PASS LOCATION VALUE FROM VIEWMODEL
     private suspend fun getForecast() {
         withContext(Dispatchers.IO) {
-            val result = WeatherApi.retrofitService.getFiveDaysWeather("Lahore", APP_ID)
+            val result = WeatherApi.retrofitService.getFiveDaysWeather("Lahore",
+                APP_ID)
             try {
                 if(result.isSuccessful) {
                     prepareThreeHourlyForecastData(result.body())
                     prepareWeeklyForecastData(result.body())
                 }
+
             } catch (e: HttpException) {
                 println("Exception ${e.message}")
             } catch (e: Throwable) {
@@ -37,40 +38,38 @@ class WeatherRepository {
     }
 
     private fun prepareThreeHourlyForecastData(result: ForecastWeatherModel?) {
-        result?.let {
-            val tempList = result.list.subList(START_INDEX,END_INDEX)
-            for( forecast in tempList){
-                weatherForecast.threeHourly.add(
-                    ThreeHourlyWeatherModel(
-                    helper.getTimeFromDate(forecast.dt_txt),
-                    helper.convertToCelsius(forecast.main.temp).toString()
-                    )
+        val data = result ?: return
+        val tempList = data.list.subList(START_INDEX, END_INDEX)
+        for (forecast in tempList) {
+            weatherForecast.threeHourly.add(
+                ThreeHourlyWeatherModel(
+                    formatHelper.getTimeFromDate(forecast.dt_txt),
+                    formatHelper.convertToCelsius(forecast.main.temp).toString()
                 )
-            }
+            )
         }
     }
 
     private fun prepareWeeklyForecastData(result: ForecastWeatherModel?) {
-        result?.let {
-            for (i in START until SIZE step DIFFERENCE) {
-                val forecast = result.list[i]
-                weatherForecast.weekly.add(
-                    WeeklyWeatherModel(
-                    helper.getDayFromDate(forecast.dt_txt),
-                    helper.formatWeeklyForecastTemperature(
+        val data = result ?: return
+        for (i in START until SIZE step DIFFERENCE) {
+            val forecast = data.list[i]
+            weatherForecast.weekly.add(
+                WeeklyWeatherModel(
+                    formatHelper.getDayFromDate(forecast.dt_txt),
+                    formatHelper.formatWeeklyForecastTemperature(
                         forecast.main.temp_min,
-                        forecast.main.temp_max)
+                        forecast.main.temp_max
+                    )
                 )
-                )
-            }
+            )
         }
     }
 
-    //TODO: PASS LOCATION VALUE FROM VIEWMODEL
+
     private suspend fun getCurrentWeather() {
         withContext(Dispatchers.IO) {
-            val weatherObj = WeatherApi.retrofitService.getCurrentWeather(
-                "Lahore", APP_ID)
+            val weatherObj = WeatherApi.retrofitService.getCurrentWeather("Lahore", APP_ID)
             try {
                 if (weatherObj.isSuccessful) {
                     val result = weatherObj.body()

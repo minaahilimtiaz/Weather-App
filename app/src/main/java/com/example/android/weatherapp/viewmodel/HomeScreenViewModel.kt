@@ -38,12 +38,12 @@ class HomeScreenViewModel : BaseViewModel() {
 
     private fun fetchDataFromRepository() {
         coroutineScope.launch {
-            try{
+            try {
                 val result: ForecastData = repository.fetchData()
                 forecastData = result
                 _eventDataFetched.value = true
                 _eventLoading.value = true
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 onErrorOccurred(e.message.toString())
             }
         }

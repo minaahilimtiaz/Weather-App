@@ -34,7 +34,7 @@ class HomeScreenFragment : BaseFragment() {
         return binding.root
     }
 
-    private fun setOnDataFetchedObserver(binding: FragmentHomeScreenBinding, adapter: HomeScreenAdapter ) {
+    private fun setOnDataFetchedObserver(binding: FragmentHomeScreenBinding, adapter: HomeScreenAdapter) {
         viewModel.eventDataFetched.observe(viewLifecycleOwner, Observer {
             binding.homeScreenReyclerview.adapter = adapter
             adapter.data = viewModel.forecastData
@@ -42,51 +42,15 @@ class HomeScreenFragment : BaseFragment() {
     }
 
     private fun setOnLoadingObserver(binding: FragmentHomeScreenBinding) {
-        viewModel.eventLoading.observe(viewLifecycleOwner, Observer {hasLoaded ->
-            if(hasLoaded) {
-                hideProgressBar(binding)
-            } else {
-                showProgressBar(binding)
-            }
+        viewModel.eventLoading.observe(viewLifecycleOwner, Observer { hasLoaded ->
+            checkLoading(hasLoaded, binding.progressBar)
         })
     }
 
     private fun setOnErrorObserver(binding: FragmentHomeScreenBinding) {
-        viewModel.eventError.observe(viewLifecycleOwner, Observer {errorOccurred ->
-            if(errorOccurred) {
-                hideProgressBar(binding)
-                showError(binding)
-            } else {
-                showProgressBar(binding)
-                hideError(binding)
-            }
+        viewModel.eventError.observe(viewLifecycleOwner, Observer { errorOccurred ->
+             checkError(errorOccurred, binding.progressBar, binding.error, viewModel.errorString)
         })
     }
 
-    private fun hideProgressBar(binding: FragmentHomeScreenBinding) {
-        binding.progressBar.apply {
-            progress = MAX_PROGRESS
-            visibility = View.INVISIBLE
-        }
-    }
-
-    private fun showProgressBar(binding: FragmentHomeScreenBinding) {
-        binding.progressBar.apply {
-            progress = MIN_PROGRESS
-            visibility = View.VISIBLE
-        }
-    }
-
-    private fun showError(binding: FragmentHomeScreenBinding) {
-        binding.error.apply{
-            visibility = View.VISIBLE
-            text = viewModel.errorString
-        }
-    }
-
-    private fun hideError(binding: FragmentHomeScreenBinding) {
-        binding.error.apply{
-            visibility = View.INVISIBLE
-        }
-    }
 }

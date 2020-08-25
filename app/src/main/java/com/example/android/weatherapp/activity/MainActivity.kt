@@ -24,6 +24,7 @@ private const val REQUEST_LOCATION = 1
 class MainActivity : BaseActivity() , LocationListener {
     private lateinit  var locationManager: LocationManager
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
