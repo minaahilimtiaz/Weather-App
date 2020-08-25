@@ -13,37 +13,20 @@ import kotlinx.android.synthetic.main.three_hourly_weather_layout.view.*
 class ThreeHourlyWeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bindingViewToData(item: List<ThreeHourlyWeatherModel>) {
-        setFirstHourlyValues(item[0])
-        setSecondHourlyValues(item[1])
-        setThirdHourlyValues(item[2])
-        setFourthHourlyValues(item[3])
-        setFifthHourlyValues(item[4])
+        setHourlyValues(itemView.first_hourly_layout, item[0])
+        setHourlyValues(itemView.second_hourly_layout, item[1])
+        setHourlyValues(itemView.third_hourly_layout, item[2])
+        setHourlyValues(itemView.fourth_hourly_layout, item[3])
+        setHourlyValues(itemView.fifth_hourly_layout, item[4])
+
     }
 
-    private fun setFirstHourlyValues(item: ThreeHourlyWeatherModel) {
-        itemView.first_hourly_layout.hourly_time_text.text = item.time
-        itemView.first_hourly_layout.hourly_temperature_text.text = item.temperature
+    private fun setHourlyValues(itemLayout: View, item: ThreeHourlyWeatherModel) {
+        itemLayout.hourly_time_text.text = item.time
+        itemLayout.hourly_temperature_text.text = item.temperature
     }
 
-    private fun setSecondHourlyValues(item: ThreeHourlyWeatherModel) {
-        itemView.second_hourly_layout.hourly_time_text.text = item.time
-        itemView.second_hourly_layout.hourly_temperature_text.text = item.temperature
-    }
 
-    private fun setThirdHourlyValues(item: ThreeHourlyWeatherModel) {
-        itemView.third_hourly_layout.hourly_time_text.text = item.time
-        itemView.third_hourly_layout.hourly_temperature_text.text = item.temperature
-    }
-
-    private fun setFourthHourlyValues(item: ThreeHourlyWeatherModel) {
-        itemView.fourth_hourly_layout.hourly_time_text.text = item.time
-        itemView.fourth_hourly_layout.hourly_temperature_text.text = item.temperature
-    }
-
-    private fun setFifthHourlyValues(item: ThreeHourlyWeatherModel) {
-        itemView.fifth_hourly_layout.hourly_time_text.text = item.time
-        itemView.fifth_hourly_layout.hourly_temperature_text.text = item.temperature
-    }
 
     companion object {
         fun inflateAndGetViewHolder(parent: ViewGroup): ThreeHourlyWeatherViewHolder {

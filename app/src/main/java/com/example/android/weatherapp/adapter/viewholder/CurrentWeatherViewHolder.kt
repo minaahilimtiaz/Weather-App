@@ -12,10 +12,11 @@ import kotlinx.android.synthetic.main.current_weather_layout.view.*
 class CurrentWeatherViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
     fun bindingViewToData(item: CurrentWeatherModel) {
+        val helper = Helper()
         itemView.current_weather_type_text.text = item.weather[0].main
-        itemView.current_temp_text.text = Helper.convertToCelsius(item.main.temp).toString()
+        itemView.current_temp_text.text = helper.convertToCelsius(item.main.temp).toString()
         itemView.current_location_text.text = item.name
-        itemView.current_date_text.text = Helper.getCurrentDate()
+        itemView.current_date_text.text = helper.getCurrentDate()
     }
 
     companion object {
