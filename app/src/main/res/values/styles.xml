@@ -24,7 +24,7 @@
         <item name="android:textColor">#FBFBFB</item>
         <item name="android:textSize">20sp</item>
     </style>
-
+  
     <style name="CardViewStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
