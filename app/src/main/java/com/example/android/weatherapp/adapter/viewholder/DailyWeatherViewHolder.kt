@@ -4,12 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.android.weatherapp.R
 import com.example.android.weatherapp.models.WeeklyWeatherModel
-import com.example.android.weatherapp.utilities.Helper
 import com.example.android.weatherapp.utilities.loadImage
 import kotlinx.android.synthetic.main.daily_weather_layout.view.*
 

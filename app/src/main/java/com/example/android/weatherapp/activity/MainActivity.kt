@@ -1,5 +1,6 @@
 package com.example.android.weatherapp.activity
 
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,7 +10,6 @@ import android.location.*
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentTransaction
@@ -24,17 +24,17 @@ private const val REQUEST_LOCATION = 1
 
 class MainActivity : BaseActivity() , LocationListener {
     private lateinit  var locationManager: LocationManager
+  
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager;
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
 
     override fun onStart() {
         super.onStart()
         replaceHomeScreenFragment("Lahore")
-     //   checkPermissionsAndGetLocation()
+       // checkPermissionsAndGetLocation()
     }
 
     private fun checkPermissionsAndGetLocation() {
@@ -46,7 +46,7 @@ class MainActivity : BaseActivity() , LocationListener {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION);
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
             return
         } else {
             requestLocation()
@@ -55,12 +55,13 @@ class MainActivity : BaseActivity() , LocationListener {
 
     @SuppressLint("MissingPermission")
     private fun requestLocation() {
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 1.0f, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L,
+            1.0f, this)
         val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        val geocoder = Geocoder(this, Locale.getDefault());
+        val geoCoder = Geocoder(this, Locale.getDefault())
         location?.let {
             val addresses: List<Address> =
-                geocoder.getFromLocation(location.latitude, location.longitude, 1);
+                geoCoder.getFromLocation(location.latitude, location.longitude, 1)
             val cityName: String = addresses[0].locality
             replaceHomeScreenFragment(cityName)
         }
@@ -91,7 +92,7 @@ class MainActivity : BaseActivity() , LocationListener {
                     })
                 }.show()
         } else {
-            requestLocation();
+            requestLocation()
         }
     }
 

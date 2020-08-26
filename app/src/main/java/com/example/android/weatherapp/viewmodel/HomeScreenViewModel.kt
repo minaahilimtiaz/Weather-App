@@ -2,108 +2,101 @@ package com.example.android.weatherapp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.android.weatherapp.WeatherApi
-import com.example.android.weatherapp.models.CurrentWeatherModel
-import com.example.android.weatherapp.models.ForecastWeatherModel
-import com.example.android.weatherapp.models.ThreeHourlyWeatherModel
-import com.example.android.weatherapp.models.WeeklyWeatherModel
-import com.example.android.weatherapp.utilities.Helper
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.example.android.weatherapp.WeatherRepository
+import com.example.android.weatherapp.models.*
+import com.example.android.weatherapp.utilities.NO_NETWORK
+import com.example.android.weatherapp.utilities.NO_RECORD
+import com.example.android.weatherapp.utilities.START_INDEX
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
+import java.lang.Exception
 
-class HomeScreenViewModel : BaseViewModel() {
+class HomeScreenViewModel(city: String) : BaseViewModel() {
 
     private val viewModelJob = Job ()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    val currentWeather = mutableListOf<CurrentWeatherModel>()
-    val threeHourlyWeatherForecast = mutableListOf<ThreeHourlyWeatherModel>()
-    val weeklyWeatherForecast = mutableListOf<WeeklyWeatherModel>()
+    var forecastData: ForecastData = ForecastData()
+    var errorString = String()
 
-    private val _eventDataUpdated = MutableLiveData<Boolean>()
-    val eventDataUpdated: LiveData<Boolean>
-        get() = _eventDataUpdated
+    private val _eventDataFetched = MutableLiveData<Boolean>()
+    val eventDataFetched: LiveData<Boolean>
+        get() = _eventDataFetched
+
+    private val _eventLoading = MutableLiveData<Boolean>()
+    val eventLoading: LiveData<Boolean>
+        get() = _eventLoading
+
+    private val _eventError = MutableLiveData<Boolean>()
+    val eventError: LiveData<Boolean>
+        get() = _eventError
+
+    private val repository = WeatherRepository()
 
     init {
-      fetchData("Lahore")
+      fetchDataFromRepository(city)
     }
 
-    fun fetchData(city: String) {
-        getCurrentWeather(city)
-        getForecast(city)
-    }
-
-    private fun getForecast(city: String) {
-        coroutineScope.launch {
-            val forecastObj = WeatherApi.retrofitService.getFiveDaysWeather(city,
-                Helper.APP_ID)
-            try {
-                if(forecastObj.isSuccessful) {
-                    prepareThreeHourlyForecastData(forecastObj.body())
-                    prepareWeeklyForecastData(forecastObj.body())
+    fun fetchDataFromRepository(city: String) {
+            coroutineScope.launch {
+                try {
+                    val result: ForecastData = repository.fetchData(city)
+                    if (result.current.isEmpty() || result.threeHourly.isEmpty() || result.weekly.isEmpty()) {
+                        onErrorOccurred(NO_RECORD)
+                    } else {
+                        onSuccess(result)
+                    }
+                } catch (e: Exception) {
+                    onErrorOccurred(NO_NETWORK)
                 }
-                onDataUpdated()
-            } catch (e: HttpException) {
-                println("Exception ${e.message}")
-            } catch (e: Throwable) {
-                println("Ooops: Something else went wrong")
             }
-        }
     }
 
-    private fun prepareThreeHourlyForecastData(forecastObj: ForecastWeatherModel?) {
-        forecastObj?.let {
-            val tempList = forecastObj.list.subList(0,5)
-            for( obj in tempList){
-                threeHourlyWeatherForecast.add(ThreeHourlyWeatherModel(
-                        Helper.getTimeFromDate(obj.dt_txt),
-                        Helper.convertToCelsius(obj.main.temp).toString(),
-                        obj.weather[0].icon
-                    )
-                )
-            }
-        }
+    private fun onSuccess(result: ForecastData) {
+        clearPreviousData()
+        assignNewData(result)
+        _eventDataFetched.value = true
+        _eventLoading.value = true
     }
 
-    private fun prepareWeeklyForecastData(forecastObj: ForecastWeatherModel?) {
-        forecastObj?.let {
-            for (obj in 11 until 40 step 8) {
-                val tempObj = forecastObj.list[obj]
-                weeklyWeatherForecast.add(WeeklyWeatherModel(
-                        Helper.getDayFromDate(tempObj.dt_txt),
-                        Helper.formatWeeklyForecastTemperature(
-                            tempObj.main.temp_min,
-                            tempObj.main.temp_max),
-                        tempObj.weather[0].icon
-                    )
-                )
-            }
-        }
+    private fun clearPreviousData() {
+        forecastData.current.clear()
+        forecastData.threeHourly.clear()
+        forecastData.weekly.clear()
     }
 
-    private fun getCurrentWeather(city: String) {
-        coroutineScope.launch {
-            val weatherObj = WeatherApi.retrofitService.getCurrentWeather(city,
-                Helper.APP_ID)
-            try {
-                 if(weatherObj.isSuccessful) {
-                     val result = weatherObj.body()
-                     result?.let{
-                         currentWeather.add(CurrentWeatherModel(result.weather, result.main, result.name))
-                     }
-                 }
-            } catch (e: HttpException) {
-               println("Exception ${e.message}")
-            } catch (e: Throwable) {
-                println("Something else went wrong")
-            }
-        }
+    private fun assignNewData(result: ForecastData) {
+        forecastData.current.addAll(START_INDEX, result.current)
+        forecastData.threeHourly.addAll(START_INDEX, result.threeHourly)
+        forecastData.weekly.addAll(START_INDEX, result.weekly)
     }
 
-    fun onDataUpdated() {
-        _eventDataUpdated.value = true
+    private fun onErrorOccurred( errorMessage: String) {
+        errorString = errorMessage
+        _eventError.value = true
+    }
+
+    fun onDataFetched() {
+        _eventDataFetched.value = false
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
+}
+
+class HomeViewModelFactory(private val city: String) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HomeScreenViewModel::class.java)) {
+            return HomeScreenViewModel(city) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
