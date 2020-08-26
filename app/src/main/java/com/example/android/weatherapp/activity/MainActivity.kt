@@ -1,6 +1,5 @@
 package com.example.android.weatherapp.activity
 
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
@@ -19,7 +18,6 @@ import com.example.android.weatherapp.fragment.HomeScreenFragment
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
-
 private const val REQUEST_LOCATION = 1
 
 class MainActivity : BaseActivity() , LocationListener {
@@ -33,7 +31,8 @@ class MainActivity : BaseActivity() , LocationListener {
 
     override fun onStart() {
         super.onStart()
-        checkPermissionsAndGetLocation()
+        replaceHomeScreenFragment("Lahore")
+       // checkPermissionsAndGetLocation()
     }
 
     private fun checkPermissionsAndGetLocation() {
