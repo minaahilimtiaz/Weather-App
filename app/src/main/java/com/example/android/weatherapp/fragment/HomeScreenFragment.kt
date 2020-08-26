@@ -51,14 +51,15 @@ class HomeScreenFragment : BaseFragment() {
     }
 
     private fun setViewModel() {
-        viewModelFactory = HomeViewModelFactory(DEFAULT_LOCATION)
+        val application = activity?.application ?: return
+        viewModelFactory = HomeViewModelFactory(DEFAULT_LOCATION, application)
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(HomeScreenViewModel::class.java)
     }
 
     private fun setOnDataFetchedObserver(adapter: HomeScreenAdapter) {
         viewModel.eventDataFetched.observe(viewLifecycleOwner, Observer { dataFetched ->
-            if(dataFetched) {
+            if (dataFetched) {
                 adapter.updateData(viewModel.forecastData)
                 viewModel.onDataFetched()
             }

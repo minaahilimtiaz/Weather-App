@@ -29,9 +29,9 @@ class WeatherRepository {
                     prepareWeeklyForecastData(result.body())
                 }
             } catch (e: HttpException) {
-                println("Exception ${e.message}")
+                throw (e)
             } catch (e: Throwable) {
-                println("Repo + ${e.message}")
+                throw(e)
             }
         }
     }
@@ -58,9 +58,8 @@ class WeatherRepository {
                 WeeklyWeatherModel(
                     formatHelper.getDayFromDate(forecast.dt_txt),
                     formatHelper.formatWeeklyForecastTemperature(
-                        forecast.main.temp_min,
-                        forecast.main.temp_max
-                    ),  forecast.weather[0].icon
+                        forecast.main.temp_min, forecast.main.temp_max
+                    ), forecast.weather[0].icon
                 )
             )
         }
@@ -69,22 +68,23 @@ class WeatherRepository {
 
     private suspend fun getCurrentWeather(city: String) {
         withContext(Dispatchers.IO) {
-            val weatherObj = WeatherApi.retrofitService.getCurrentWeather(city, APP_ID)
+            val data = WeatherApi.retrofitService.getCurrentWeather(city, APP_ID)
             try {
-                if (weatherObj.isSuccessful) {
-                    val result = weatherObj.body()
-                    result?.let {
-                        weatherForecast.current.add(CurrentWeatherModel(result.weather, result.main,
-                                result.name)
-                        )
-                    }
+                if (data.isSuccessful) {
+                    val result = data.body()
+                    prepareCurrentWeatherData(result)
                 }
             } catch (e: HttpException) {
-                println("Exception1  ${e.message}")
+                throw (e)
             } catch (e: Throwable) {
-                println("Repo1 + ${e.message}")
+                throw(e)
             }
         }
+    }
+
+    private fun prepareCurrentWeatherData(result: CurrentWeatherModel?) {
+        val data = result ?: return
+        weatherForecast.current.add(CurrentWeatherModel(data.weather, data.main, data.name))
     }
 
     private fun clearPreviousData() {

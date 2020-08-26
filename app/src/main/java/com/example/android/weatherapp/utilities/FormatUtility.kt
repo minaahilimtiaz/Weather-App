@@ -1,6 +1,5 @@
 package com.example.android.weatherapp.utilities
 
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
@@ -16,7 +15,7 @@ class FormatUtility {
     }
 
     fun getTimeFromDate(inputDate: String): String {
-        val format: DateFormat = SimpleDateFormat(RESULT_DATE_FORMAT, Locale.ENGLISH)
+        val format = SimpleDateFormat(RESULT_DATE_FORMAT, Locale.ENGLISH)
         val formattedDate = format.parse(inputDate)
         val date = formattedDate ?: ERROR_MESSAGE
         val time = SimpleDateFormat(TIME_FORMAT).format(date)

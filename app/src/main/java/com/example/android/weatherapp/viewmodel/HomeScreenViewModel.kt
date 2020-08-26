@@ -1,5 +1,6 @@
 package com.example.android.weatherapp.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,20 +9,22 @@ import com.example.android.weatherapp.WeatherRepository
 import com.example.android.weatherapp.models.*
 import com.example.android.weatherapp.utilities.NO_NETWORK
 import com.example.android.weatherapp.utilities.NO_RECORD
+import com.example.android.weatherapp.utilities.NetworkUtilities
 import com.example.android.weatherapp.utilities.START_INDEX
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import retrofit2.HttpException
 
-class HomeScreenViewModel(city: String) : BaseViewModel() {
+class HomeScreenViewModel(city: String, application: Application) : BaseViewModel(application) {
 
+    private val app = application
     private val viewModelJob = Job ()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    var forecastData: ForecastData = ForecastData()
-    var errorString = String()
+    var forecastData = ForecastData()
+    var errorString: String = String()
 
     private val _eventDataFetched = MutableLiveData<Boolean>()
     val eventDataFetched: LiveData<Boolean>
@@ -42,18 +45,34 @@ class HomeScreenViewModel(city: String) : BaseViewModel() {
     }
 
     fun fetchDataFromRepository(city: String) {
+        if (NetworkUtilities().checkConnectionStatus(app.applicationContext)) {
             coroutineScope.launch {
                 try {
                     val result: ForecastData = repository.fetchData(city)
-                    if (result.current.isEmpty() || result.threeHourly.isEmpty() || result.weekly.isEmpty()) {
-                        onErrorOccurred(NO_RECORD)
-                    } else {
-                        onSuccess(result)
-                    }
-                } catch (e: Exception) {
-                    onErrorOccurred(NO_NETWORK)
+                    handleResponseFromRepository(result)
+
+                } catch (e: HttpException) {
+                    onErrorOccurred(e.message.toString())
+                } catch (e: Throwable) {
+                    onErrorOccurred(e.message.toString())
                 }
             }
+        } else {
+            onErrorOccurred(NO_NETWORK)
+        }
+    }
+
+    private fun handleResponseFromRepository(result: ForecastData) {
+        if (isResponseEmpty(result)) {
+            onErrorOccurred(NO_RECORD)
+        } else {
+            onSuccess(result)
+        }
+    }
+
+    private fun isResponseEmpty(response: ForecastData): Boolean {
+        return (response.current.isEmpty() || response.threeHourly.isEmpty()
+                || response.weekly.isEmpty())
     }
 
     private fun onSuccess(result: ForecastData) {
@@ -91,11 +110,11 @@ class HomeScreenViewModel(city: String) : BaseViewModel() {
 
 }
 
-class HomeViewModelFactory(private val city: String) : ViewModelProvider.Factory {
+class HomeViewModelFactory(private val city: String, private val application: Application) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeScreenViewModel::class.java)) {
-            return HomeScreenViewModel(city) as T
+            return HomeScreenViewModel(city, application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

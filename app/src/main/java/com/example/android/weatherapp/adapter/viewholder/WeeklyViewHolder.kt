@@ -10,7 +10,7 @@ import com.example.android.weatherapp.adapter.WeeklyRecyclerAdapter
 import com.example.android.weatherapp.models.WeeklyWeatherModel
 import kotlinx.android.synthetic.main.weekly_weather_layout.view.*
 
-class WeeklyWeatherViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
+class WeeklyWeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bindingViewToData(itemList: List<WeeklyWeatherModel>, context: Context) {
         val adapter = WeeklyRecyclerAdapter(context)

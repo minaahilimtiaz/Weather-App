@@ -17,7 +17,7 @@ private const val NUMBER_OF_ROWS = 3
 class HomeScreenAdapter(activityContext: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val context = activityContext
-    var data: ForecastData = ForecastData()
+    private var data: ForecastData = ForecastData()
 
     fun updateData(result: ForecastData) {
         clearPreviousData()
