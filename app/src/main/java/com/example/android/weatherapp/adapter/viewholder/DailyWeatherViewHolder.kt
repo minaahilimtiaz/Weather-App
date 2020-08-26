@@ -10,7 +10,7 @@ import com.example.android.weatherapp.models.WeeklyWeatherModel
 import com.example.android.weatherapp.utilities.loadImage
 import kotlinx.android.synthetic.main.daily_weather_layout.view.*
 
-class DailyWeatherViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
+class DailyWeatherViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bindingViewToData(item: WeeklyWeatherModel, context: Context) {
         itemView.daily_name_text.text = item.day

@@ -20,7 +20,6 @@ class ThreeHourlyWeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
         setHourlyValues(itemView.third_hourly_layout, item[2], context)
         setHourlyValues(itemView.fourth_hourly_layout, item[3], context)
         setHourlyValues(itemView.fifth_hourly_layout, item[4], context)
-
     }
 
     private fun setHourlyValues(itemLayout: View, item: ThreeHourlyWeatherModel, context: Context) {

@@ -15,5 +15,6 @@
     <string name="settings">Setting</string>
     <string name="city_hint">Enter city name to see weather</string>
     <string name="search">Search</string>
+    <string name="positive_button">OK</string>
 
 </resources>

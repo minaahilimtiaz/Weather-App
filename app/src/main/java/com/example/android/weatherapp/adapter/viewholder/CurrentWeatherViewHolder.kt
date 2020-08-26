@@ -11,7 +11,7 @@ import com.example.android.weatherapp.utilities.FormatUtility
 import com.example.android.weatherapp.utilities.loadImage
 import kotlinx.android.synthetic.main.current_weather_layout.view.*
 
-class CurrentWeatherViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+class CurrentWeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bindingViewToData(item: CurrentWeatherModel, context: Context) {
         val formatHelper = FormatUtility()

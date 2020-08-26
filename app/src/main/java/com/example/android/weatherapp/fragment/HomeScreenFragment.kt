@@ -29,10 +29,7 @@ class HomeScreenFragment : BaseFragment() {
         val binding: FragmentHomeScreenBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home_screen, container, false)
         setViewModel()
-        //TODO: Rename it and discuss it
-        activity?.baseContext?.let {context ->
-            setAdapter(context, binding)
-        }
+        setAdapter(context, binding)
         setOnLoadingObserver(binding)
         setOnErrorObserver(binding)
         setSearchButton(binding)
@@ -46,8 +43,9 @@ class HomeScreenFragment : BaseFragment() {
         }
     }
 
-    private fun setAdapter(activityContext: Context, binding: FragmentHomeScreenBinding) {
-        val adapter = HomeScreenAdapter(activityContext)
+    private fun setAdapter(activityContext: Context?, binding: FragmentHomeScreenBinding) {
+        val context = activityContext ?: return
+        val adapter = HomeScreenAdapter(context)
         binding.homeScreenReyclerview.adapter = adapter
         setOnDataFetchedObserver(adapter)
     }
@@ -78,8 +76,7 @@ class HomeScreenFragment : BaseFragment() {
     private fun setOnErrorObserver(binding: FragmentHomeScreenBinding) {
         viewModel.eventError.observe(viewLifecycleOwner, Observer { errorOccurred ->
             checkErrorStatus(
-                errorOccurred, binding.progressBar, binding.error,
-                viewModel.errorString, binding.cityText, binding.searchButton,
+                errorOccurred, binding.progressBar, viewModel.errorString,
                 binding.homeScreenReyclerview
             )
         })

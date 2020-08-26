@@ -1,27 +1,26 @@
 package com.example.android.weatherapp.fragment
 
+import android.app.AlertDialog
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.example.android.weatherapp.R
 import com.example.android.weatherapp.utilities.MAX_PROGRESS
 import com.example.android.weatherapp.utilities.MIN_PROGRESS
 
 open class BaseFragment : Fragment() {
 
-    fun checkErrorStatus(errorOccurred: Boolean, progressBar: ProgressBar, errorView: TextView,
-        errorString: String, cityText: TextView, searchButton: Button,
-        recyclerView: RecyclerView) {
+    fun checkErrorStatus(errorOccurred: Boolean, progressBar: ProgressBar,
+        errorString: String, recyclerView: RecyclerView) {
         if (errorOccurred) {
             hideProgressBar(progressBar)
-            showError(errorView, errorString)
-            hideSearchViews(cityText, searchButton)
+            createAlertOnError(errorString)
             hideRecyclerView(recyclerView)
         } else {
             showProgressBar(progressBar)
-            hideError(errorView)
         }
     }
 
@@ -35,7 +34,6 @@ open class BaseFragment : Fragment() {
             showRecyclerView(recyclerView)
         } else {
             showProgressBar(progressBar)
-            hideSearchViews(cityText, searchButton)
             hideRecyclerView(recyclerView)
         }
     }
@@ -48,26 +46,10 @@ open class BaseFragment : Fragment() {
         recyclerView.visibility = View.VISIBLE
     }
 
-    private fun hideSearchViews(cityText: TextView, searchButton: Button) {
-        cityText.apply {
-            visibility = View.GONE
-        }
-
-        searchButton.apply {
-            visibility = View.GONE
-        }
-
-    }
 
     private fun showSearchViews(cityText: TextView, searchButton: Button) {
-        cityText.apply {
-            visibility = View.VISIBLE
-        }
-
-        searchButton.apply {
-            visibility = View.VISIBLE
-        }
-
+        cityText.visibility = View.VISIBLE
+        searchButton.visibility = View.VISIBLE
     }
 
     private fun hideProgressBar(progressBar: ProgressBar) {
@@ -84,16 +66,11 @@ open class BaseFragment : Fragment() {
         }
     }
 
-    private fun showError(errorView: TextView, errorString: String) {
-        errorView.apply {
-            visibility = View.VISIBLE
-            text = errorString
-        }
+    private fun createAlertOnError(errorMessage: String) {
+        val alertBuilder = AlertDialog.Builder(activity)
+        alertBuilder.setMessage(errorMessage)
+            .setPositiveButton(R.string.positive_button) { dialogClicked, buttonClicked ->
+            }.show()
     }
 
-    private fun hideError(errorView: TextView) {
-        errorView.apply {
-            visibility = View.INVISIBLE
-        }
-    }
 }

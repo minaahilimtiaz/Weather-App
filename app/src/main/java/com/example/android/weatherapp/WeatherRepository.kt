@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-class WeatherRepository() {
+class WeatherRepository {
 
     private val weatherForecast: ForecastData = ForecastData()
     private val formatHelper: FormatUtility = FormatUtility()
