@@ -1,23 +1,23 @@
 package com.example.android.weatherapp.utilities
 
-import android.annotation.SuppressLint
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
 
-class Helper {
+class FormatUtility {
 
     fun getDayFromDate(inputDate: String): String {
         val format = SimpleDateFormat(RESULT_DATE_FORMAT, Locale.ENGLISH)
-        val date = format.parse(inputDate)
+        val formattedDate = format.parse(inputDate)
+        val date = formattedDate ?: ERROR_MESSAGE
         val todayDate = SimpleDateFormat(DAY_FORMAT).format(date)
         return todayDate.toString()
     }
 
     fun getTimeFromDate(inputDate: String): String {
-        val format: DateFormat = SimpleDateFormat(RESULT_DATE_FORMAT, Locale.ENGLISH)
-        val date = format.parse(inputDate)
+        val format = SimpleDateFormat(RESULT_DATE_FORMAT, Locale.ENGLISH)
+        val formattedDate = format.parse(inputDate)
+        val date = formattedDate ?: ERROR_MESSAGE
         val time = SimpleDateFormat(TIME_FORMAT).format(date)
         return time.toString()
     }
@@ -39,5 +39,7 @@ class Helper {
         val maxCelsiusFormatted = round(maxCelsius).toString()
         return ("$minCelsiusFormatted / $maxCelsiusFormatted")
     }
+
 }
+
 

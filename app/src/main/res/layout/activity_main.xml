@@ -7,12 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-   <!-- <fragment
-        android:id="@+id/nav_host_fragment"
-        android:name="com.example.android.weatherapp.fragment.HomeScreenFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
--->
     <FrameLayout
         android:id="@+id/your_placeholder"
         android:layout_width="match_parent"

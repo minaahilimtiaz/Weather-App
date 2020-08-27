@@ -1,8 +1,9 @@
 package com.example.android.weatherapp.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 
 //To allow class to be inheritable we mark it open
-open class BaseViewModel() : ViewModel() {
+open class BaseViewModel(application: Application) : AndroidViewModel(application) {
 
 }
