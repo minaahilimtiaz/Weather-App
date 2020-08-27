@@ -6,32 +6,32 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-class WeatherRepository() {
+class WeatherRepository {
 
     private val weatherForecast: ForecastData = ForecastData()
-    private val formatHelper: Helper = Helper()
+    private val formatHelper: FormatUtility = FormatUtility()
 
-    suspend fun fetchData(): ForecastData {
+    suspend fun fetchData(city: String): ForecastData {
+        clearPreviousData()
         withContext(Dispatchers.IO) {
-            getForecast()
-            getCurrentWeather()
+            getForecast(city)
+            getCurrentWeather(city)
         }
         return weatherForecast
     }
 
-    private suspend fun getForecast() {
+    private suspend fun getForecast(city: String) {
         withContext(Dispatchers.IO) {
             try {
-                val result = WeatherApi.retrofitService.getFiveDaysWeather("Lahore",
-                    APP_ID)
+                val result = WeatherApi.retrofitService.getFiveDaysWeather(city, APP_ID)
                 if(result.isSuccessful) {
                     prepareThreeHourlyForecastData(result.body())
                     prepareWeeklyForecastData(result.body())
                 }
             } catch (e: HttpException) {
-                println("Exception ${e.message}")
+                throw (e)
             } catch (e: Throwable) {
-                println("Repo + ${e.message}")
+                throw(e)
             }
         }
     }
@@ -43,7 +43,8 @@ class WeatherRepository() {
             weatherForecast.threeHourly.add(
                 ThreeHourlyWeatherModel(
                     formatHelper.getTimeFromDate(forecast.dt_txt),
-                    formatHelper.convertToCelsius(forecast.main.temp).toString()
+                    formatHelper.convertToCelsius(forecast.main.temp).toString(),
+                    forecast.weather[0].icon
                 )
             )
         }
@@ -57,33 +58,39 @@ class WeatherRepository() {
                 WeeklyWeatherModel(
                     formatHelper.getDayFromDate(forecast.dt_txt),
                     formatHelper.formatWeeklyForecastTemperature(
-                        forecast.main.temp_min,
-                        forecast.main.temp_max
-                    )
+                        forecast.main.temp_min, forecast.main.temp_max
+                    ), forecast.weather[0].icon
                 )
             )
         }
     }
 
 
-    private suspend fun getCurrentWeather() {
+    private suspend fun getCurrentWeather(city: String) {
         withContext(Dispatchers.IO) {
-            val weatherObj = WeatherApi.retrofitService.getCurrentWeather("Lahore", APP_ID)
+            val data = WeatherApi.retrofitService.getCurrentWeather(city, APP_ID)
             try {
-                if (weatherObj.isSuccessful) {
-                    val result = weatherObj.body()
-                    result?.let {
-                        weatherForecast.current.add(CurrentWeatherModel(result.weather, result.main,
-                                result.name)
-                        )
-                    }
+                if (data.isSuccessful) {
+                    val result = data.body()
+                    prepareCurrentWeatherData(result)
                 }
             } catch (e: HttpException) {
-                println("Exception1  ${e.message}")
+                throw (e)
             } catch (e: Throwable) {
-                println("Repo1 + ${e.message}")
+                throw(e)
             }
         }
+    }
+
+    private fun prepareCurrentWeatherData(result: CurrentWeatherModel?) {
+        val data = result ?: return
+        weatherForecast.current.add(CurrentWeatherModel(data.weather, data.main, data.name))
+    }
+
+    private fun clearPreviousData() {
+        weatherForecast.current.clear()
+        weatherForecast.threeHourly.clear()
+        weatherForecast.weekly.clear()
     }
 
 }

@@ -1,11 +1,12 @@
 package com.example.android.weatherapp.utilities
 
-//Helper class constants
+//Utility class constants
 const val DATE_FORMAT = "MMMM dd, yyyy"
 const val RESULT_DATE_FORMAT = "yyyy-MM-dd hh:mm:ss"
 const val DAY_FORMAT = "EE"
 const val TIME_FORMAT = "hh:mm"
 const val KELVIN_CONVERSION = 273.15
+const val ERROR_MESSAGE = "Couldn't Load"
 
 //Repository class constants
 const val APP_ID = "4dfdfc7144138f43bfa36b5b3a4b097f"
@@ -25,3 +26,4 @@ const val BASE_URL = "https://api.openweathermap.org/"
 //ViewModel constants
 const val NO_RECORD = "No Record Found"
 const val NO_NETWORK = "Poor or No Internet Connection"
+const val DEFAULT_LOCATION = "Lahore"

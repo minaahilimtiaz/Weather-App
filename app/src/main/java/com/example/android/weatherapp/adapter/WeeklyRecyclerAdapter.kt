@@ -1,12 +1,13 @@
 package com.example.android.weatherapp.adapter
 
+import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.weatherapp.adapter.viewholder.DailyWeatherViewHolder
 import com.example.android.weatherapp.models.WeeklyWeatherModel
 
-class WeeklyRecyclerAdapter : RecyclerView.Adapter<DailyWeatherViewHolder>() {
-
+class WeeklyRecyclerAdapter(activityContext: Context) : RecyclerView.Adapter<DailyWeatherViewHolder>() {
+     val context: Context = activityContext
     var weeklyWeatherData = listOf<WeeklyWeatherModel>()
         set(value) {
             field = value
@@ -22,6 +23,6 @@ class WeeklyRecyclerAdapter : RecyclerView.Adapter<DailyWeatherViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: DailyWeatherViewHolder, position: Int) {
-        holder.bindingViewToData(weeklyWeatherData[position])
+        holder.bindingViewToData(weeklyWeatherData[position], context)
     }
 }
