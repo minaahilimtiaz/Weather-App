@@ -25,5 +25,5 @@ const val BASE_URL = "https://api.openweathermap.org/"
 
 //ViewModel constants
 const val NO_RECORD = "No Record Found"
-const val NO_NETWORK = "Poor or No Internet Connection"
+const val NO_NETWORK = "Poor or No Internet Connection. Showing previous record"
 const val DEFAULT_LOCATION = "Lahore"

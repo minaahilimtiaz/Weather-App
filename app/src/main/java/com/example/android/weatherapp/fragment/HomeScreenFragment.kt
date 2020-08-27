@@ -33,6 +33,7 @@ class HomeScreenFragment : BaseFragment() {
         setOnLoadingObserver(binding)
         setOnErrorObserver(binding)
         setSearchButton(binding)
+        setOnNetworkErrorObserver(binding)
         return binding.root
     }
 
@@ -78,7 +79,16 @@ class HomeScreenFragment : BaseFragment() {
         viewModel.eventError.observe(viewLifecycleOwner, Observer { errorOccurred ->
             checkErrorStatus(
                 errorOccurred, binding.progressBar, viewModel.errorString,
-                binding.homeScreenReyclerview
+                binding.homeScreenReyclerview, false
+            )
+        })
+    }
+
+    private fun setOnNetworkErrorObserver(binding: FragmentHomeScreenBinding) {
+        viewModel.isNetworkConnected.observe(viewLifecycleOwner, Observer { isConnected ->
+            checkErrorStatus(
+                isConnected, binding.progressBar, viewModel.errorString,
+                binding.homeScreenReyclerview, true
             )
         })
     }

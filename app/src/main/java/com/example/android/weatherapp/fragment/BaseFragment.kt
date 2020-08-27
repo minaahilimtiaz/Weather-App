@@ -14,11 +14,11 @@ import com.example.android.weatherapp.utilities.MIN_PROGRESS
 open class BaseFragment : Fragment() {
 
     fun checkErrorStatus(errorOccurred: Boolean, progressBar: ProgressBar,
-        errorString: String, recyclerView: RecyclerView) {
+        errorString: String, recyclerView: RecyclerView, isRecyclerVisible: Boolean) {
         if (errorOccurred) {
             hideProgressBar(progressBar)
+            decideRecyclerVisibility(isRecyclerVisible, recyclerView)
             createAlertOnError(errorString)
-            hideRecyclerView(recyclerView)
         } else {
             showProgressBar(progressBar)
         }
@@ -31,21 +31,20 @@ open class BaseFragment : Fragment() {
         if (isLoaded) {
             hideProgressBar(progressBar)
             showSearchViews(cityText, searchButton)
-            showRecyclerView(recyclerView)
+            decideRecyclerVisibility(true, recyclerView)
         } else {
             showProgressBar(progressBar)
-            hideRecyclerView(recyclerView)
+            decideRecyclerVisibility(false, recyclerView)
         }
     }
 
-    private fun hideRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.visibility = View.GONE
+    private fun decideRecyclerVisibility(isVisible: Boolean, recyclerView: RecyclerView) {
+        if (isVisible) {
+            recyclerView.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.GONE
+        }
     }
-
-    private fun showRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.visibility = View.VISIBLE
-    }
-
 
     private fun showSearchViews(cityText: TextView, searchButton: Button) {
         cityText.visibility = View.VISIBLE

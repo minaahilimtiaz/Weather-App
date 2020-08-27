@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.weatherapp.WeatherRepository
+
 import com.example.android.weatherapp.models.*
 import com.example.android.weatherapp.utilities.NO_NETWORK
 import com.example.android.weatherapp.utilities.NO_RECORD
@@ -38,14 +39,17 @@ class HomeScreenViewModel(city: String, application: Application) : BaseViewMode
     val eventError: LiveData<Boolean>
         get() = _eventError
 
-    private val repository = WeatherRepository()
+    private val _isNetworkConnected = MutableLiveData<Boolean>()
+    val isNetworkConnected: LiveData<Boolean>
+        get() = _isNetworkConnected
+
+    private val repository = WeatherRepository(application)
 
     init {
       fetchDataFromRepository(city)
     }
 
     fun fetchDataFromRepository(city: String) {
-        if (NetworkUtilities().checkConnectionStatus(app.applicationContext)) {
             coroutineScope.launch {
                 try {
                     val result: ForecastData = repository.fetchData(city)
@@ -57,22 +61,29 @@ class HomeScreenViewModel(city: String, application: Application) : BaseViewMode
                     onErrorOccurred(e.message.toString())
                 }
             }
-        } else {
-            onErrorOccurred(NO_NETWORK)
-        }
     }
 
     private fun handleResponseFromRepository(result: ForecastData) {
         if (isResponseEmpty(result)) {
             onErrorOccurred(NO_RECORD)
+        } else if (!(NetworkUtilities().checkConnectionStatus(app) || isResponseEmpty(result))) {
+            onShowingPreviousResult(result)
         } else {
             onSuccess(result)
         }
     }
 
     private fun isResponseEmpty(response: ForecastData): Boolean {
-        return (response.current.isEmpty() || response.threeHourly.isEmpty()
-                || response.weekly.isEmpty())
+        return (response.current.isNullOrEmpty() || response.threeHourly.isNullOrEmpty()
+                || response.weekly.isNullOrEmpty())
+    }
+
+    private fun onShowingPreviousResult(result: ForecastData) {
+        clearPreviousData()
+        assignNewData(result)
+        errorString = NO_NETWORK
+        _eventDataFetched.value = true
+        _isNetworkConnected.value = true
     }
 
     private fun onSuccess(result: ForecastData) {
