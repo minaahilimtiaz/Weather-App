@@ -110,6 +110,7 @@ class HomeScreenViewModel(city: String, application: Application) : BaseViewMode
 
 }
 
+@Suppress("UNCHECKED_CAST")
 class HomeViewModelFactory(private val city: String, private val application: Application) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
